@@ -34,10 +34,6 @@
  iris = load_iris()
  df = pd.DataFrame(iris.data, columns=iris.feature_names)
  df['species'] = iris.target  # Adding target as species column
- # Convert categorical values to numeric (if not already)
- # In this case, iris.target is already numeric, so no conversion is necessary.
- # Otherwise, you could use df['species'] = df['species'].astype('category').cat.codes
- # Plot a scatter plot for two features: sepal length and petal length
  plt.figure(figsize=(8, 6))
  sns.scatterplot(x=df['sepal length (cm)'], y=df['petal length (cm)'], hue=df['species'], palette="viridis")
  plt.title("Scatter Plot of Sepal Length vs. Petal Length")
@@ -46,3 +42,4 @@
  plt.legend(title="Species")
  plt.show()
 ---------------------------------------------------------------------------------------------------------------------------------
+
