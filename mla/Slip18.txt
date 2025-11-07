@@ -4,32 +4,29 @@ import pandas as pd
 from sklearn.cluster import KMeans
 from sklearn.preprocessing import StandardScaler
 import matplotlib.pyplot as plt
-import seaborn as sns
 
-# Sample dataset
-df = pd.DataFrame({
-    'Pregnancies': [6,1,8,1,0,5,3,10],
+# Sample data
+data = {
     'Glucose': [148,85,183,89,137,116,78,115],
     'BloodPressure': [72,66,64,66,40,74,50,0],
-    'SkinThickness': [35,29,0,23,35,0,32,0],
-    'Insulin': [0,0,0,94,168,0,88,0],
     'BMI': [33.6,26.6,23.3,28.1,43.1,25.6,31.0,35.3],
     'Age': [50,31,32,21,33,30,26,29]
-})
+}
+df = pd.DataFrame(data)
 
-# Features and scaling
-X_scaled = StandardScaler().fit_transform(df[['Glucose','BloodPressure','BMI','Age']])
+# Scale data
+X = StandardScaler().fit_transform(df)
 
-# K-Means clustering
-df['Cluster'] = KMeans(n_clusters=3, random_state=0).fit_predict(X_scaled)
+# Apply K-Means (3 clusters)
+kmeans = KMeans(n_clusters=3, random_state=0)
+df['Cluster'] = kmeans.fit_predict(X)
 
 # Plot
-sns.scatterplot(x='Glucose', y='BMI', hue='Cluster', data=df, palette='viridis', s=100)
-plt.title("K-Means Clustering on Diabetes Data")
+plt.scatter(df['Glucose'], df['BMI'], c=df['Cluster'], cmap='viridis', s=100)
+plt.title("K-Means Clustering (Glucose vs BMI)")
 plt.xlabel("Glucose")
 plt.ylabel("BMI")
 plt.show()
-
 ---------------------------------------------------------------------------------------------------
 ##SLIP 18B
 #Write a python program to implement Polynomial Linear Regression for salary_positions dataset.
@@ -59,3 +56,4 @@ plt.show()
 # Prediction
 print("Predicted salary for level 6.5:", model.predict(poly.transform([[6.5]]))[0])
 -----------------------------------------------------------------------------------
+
