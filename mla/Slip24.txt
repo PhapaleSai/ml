@@ -16,6 +16,11 @@ from sklearn import tree
 url = "https://archive.ics.uci.edu/ml/machine-learning-databases/00267/data_banknote_authentication.txt"
 df = pd.read_csv(url, header=None, names=['Variance','Skewness','Curtosis','Entropy','Class'])
 
+# or
+# # 1. Load local dataset download file and save it and use it from question paper link type it manully you can get it 
+# df = pd.read_csv("data_banknote_authentication.txt", header=None,
+#                  names=['Variance','Skewness','Curtosis','Entropy','Class'])
+
 # 2. Features and target
 X = df.drop('Class', axis=1)
 y = df['Class']
@@ -76,4 +81,5 @@ model.fit(X_train, y_train)
 # Predict & evaluate
 y_pred = model.predict(X_test)
 print(f'Accuracy: {accuracy_score(y_test, y_pred)*100:.2f}%')
+
 ---------------------------------------------------------------------------------------------------
