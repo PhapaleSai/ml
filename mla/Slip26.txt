@@ -40,6 +40,72 @@ knn.fit(X_train, y_train)
 new_patient = [[45, 130, 70, 30.0, 40]]  # Example new patient
 new_patient_scaled = scaler.transform(new_patient)
 print(f"Optimal K: {best_k}, Prediction (1=Diabetic,0=Not): {knn.predict(new_patient_scaled)[0]}")
+--------------------------------------------------------------------------------------------------
+yash's code 
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+from sklearn.model_selection import train_test_split
+from sklearn.preprocessing import StandardScaler
+from sklearn.neighbors import KNeighborsClassifier
+from sklearn.metrics import accuracy_score
+
+# Sample Indian Diabetes dataset (you can paste this into Excel too)
+data = {
+    'Pregnancies': [6, 1, 8, 1, 0, 5, 3, 10, 2, 8, 4, 9, 6, 2, 5, 1, 4, 7, 2, 9],
+    'Glucose': [148, 85, 183, 89, 137, 116, 78, 115, 197, 125, 110, 168, 105, 90, 122, 100, 111, 141, 123, 170],
+    'BloodPressure': [72, 66, 64, 66, 40, 74, 50, 0, 70, 96, 92, 74, 63, 70, 70, 70, 72, 83, 84, 80],
+    'SkinThickness': [35, 29, 0, 23, 35, 0, 32, 0, 45, 0, 37, 0, 0, 23, 31, 35, 47, 0, 29, 32],
+    'Insulin': [0, 0, 0, 94, 168, 0, 88, 0, 543, 0, 0, 0, 0, 94, 88, 0, 174, 0, 94, 175],
+    'BMI': [33.6, 26.6, 23.3, 28.1, 43.1, 25.6, 31.0, 35.3, 30.5, 0.0, 37.6, 38.0, 23.3, 28.5, 36.8, 30.0, 36.0, 32.4, 32.0, 34.5],
+    'Age': [50, 31, 32, 21, 33, 30, 26, 29, 53, 54, 30, 43, 29, 35, 27, 23, 60, 34, 32, 38],
+    'Outcome': [1, 0, 1, 0, 1, 0, 1, 0, 1, 1, 0, 1, 0, 0, 0, 0, 1, 0, 0, 1]
+}
+
+df = pd.DataFrame(data)
+
+X = df.drop('Outcome', axis=1)
+y = df['Outcome']
+
+# Split into train and test sets
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+
+# Scale the data
+scaler = StandardScaler()
+X_train = scaler.fit_transform(X_train)
+X_test = scaler.transform(X_test)
+
+# Find the optimal value of K
+accuracy_scores = []
+k_values = range(1, 15)
+
+for k in k_values:
+    knn = KNeighborsClassifier(n_neighbors=k)
+    knn.fit(X_train, y_train)
+    y_pred = knn.predict(X_test)
+    acc = accuracy_score(y_test, y_pred)
+    accuracy_scores.append(acc)
+
+optimal_k = k_values[np.argmax(accuracy_scores)]
+print(f"Optimal value of K: {optimal_k}")
+print(f"Accuracy for K={optimal_k}: {max(accuracy_scores):.2f}")
+
+# Train final model with optimal K
+final_knn = KNeighborsClassifier(n_neighbors=optimal_k)
+final_knn.fit(X_train, y_train)
+
+# Predict for a new patient (example input)
+new_patient = np.array([[2, 120, 70, 25, 100, 28.0, 30]])  # Example patient data
+new_patient_scaled = scaler.transform(new_patient)
+
+prediction = final_knn.predict(new_patient_scaled)
+print("\nNew Patient Prediction:")
+print("Diabetic (1)" if prediction[0] == 1 else "Not Diabetic (0)")
+
+# Plot K vs Accuracy
+plt.plot(k_values, accuracy_scores, marker='o', color='blue')
+plt.title("K Value vs Accuracy")
+plt.xlabel("Number of Neighbors (K)")
 
 -------------------------------------------------------------------------------------------------------------
 #SlIP 1A,22B,26B
@@ -66,3 +132,4 @@ rules = association_rules(frequent_itemsets, metric="lift", min_threshold=1)
 print("\nAssociation Rules:")
 print(rules[['antecedents', 'consequents', 'support', 'confidence', 'lift']])
 -------------------------------------------------------------------------------------------------------------
+
