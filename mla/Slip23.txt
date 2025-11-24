@@ -1,29 +1,48 @@
-# Slip 7A , 12B , 19A , 23 A
-# Fit the simple linear regression model to Salary_positions.csv data. Predict the sa 
-#of level 11 and level 12 employees. 
+# Fit the simple linear regression and polynomial linear regression models to 
+Salary_positions.csv data. Find which one is more accurately fitting to the given  
+data. Also predict the salaries of level 11 and level 12 employees. 
 
 import pandas as pd
 from sklearn.linear_model import LinearRegression
+from sklearn.preprocessing import PolynomialFeatures
+from sklearn.metrics import r2_score
 
-# 1. Create a dummy dataset
+# 1. Dummy Dataset (Salary_positions.csv style)
 data = {
-    'Level': [1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
-    'Salary': [45000, 50000, 60000, 80000, 110000, 150000, 200000, 300000, 500000, 1000000]
+    'Level': [1,2,3,4,5,6,7,8,9,10],
+    'Salary':[45000,50000,60000,80000,110000,150000,200000,300000,500000,1000000]
 }
-df = pd.DataFrame(data)
-print("Dummy Dataset:\n", df)
 
-# 2. Features and target
+df = pd.DataFrame(data)
+print("\nDataset:\n",df)
+
+# 2. Features & Target
 X = df[['Level']]
 y = df['Salary']
 
-# 3. Train Simple Linear Regression
-model = LinearRegression()
-model.fit(X, y)
+# 3. Simple Linear Regression
+slr = LinearRegression()
+slr.fit(X,y)
+y_pred_slr = slr.predict(X)
 
-# 4. Predict salaries for level 11 and 12
-predicted_salaries = model.predict([[11], [12]])
-print("\nPredicted Salaries for Level 11 and 12:", predicted_salaries)
+# 4. Polynomial Regression (degree=4)
+poly = PolynomialFeatures(degree=4)
+X_poly = poly.fit_transform(X)
+
+plr = LinearRegression()
+plr.fit(X_poly, y)
+y_pred_plr = plr.predict(X_poly)
+
+# 5. Compare using R² score
+print("\nR² Score - Simple Linear Regression:", r2_score(y, y_pred_slr))
+print("R² Score - Polynomial Regression:", r2_score(y, y_pred_plr))
+
+# 6. Predict Salaries for Level 11 and 12
+print("\nPredictions:")
+print("SLR Level 11 & 12:", slr.predict([[11],[12]]))
+
+X_new = poly.transform([[11],[12]])
+print("Polynomial Level 11 & 12:", plr.predict(X_new))
 ---------------------------------------------------------------------------------------------------
 
 #Slip 14B , 23B 
@@ -47,3 +66,4 @@ df_clean = df.dropna()
 # 4. Display cleaned dataset
 print("\nDataset after removing null values:\n", df_clean)
 ---------------------------------------------------------------------------------------------------
+
